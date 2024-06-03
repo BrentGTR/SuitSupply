@@ -21,7 +21,7 @@ jobs:
         run: npm install -g newman
 
       - name: Run Contract Testing Collection
-        run: newman run 'Contract Testing.postman_collection.json' --global-var "data='data.json'" --global-var "workspace='workspace.postman_globals.json'"
+        run: newman run 'Contract Testing.postman_collection.json' --iteration-data "data='data.json'" --global-var "workspace='workspace.postman_globals.json'"
 
       - name: Run Integration Testing Collection
-        run: newman run 'Integration Testing.postman_collection.json' --global-var "data='data.json'" --global-var "workspace='workspace.postman_globals.json'"
+        run: newman run 'Integration Testing.postman_collection.json' --iteration-data "data='data.json'" --global-var "workspace='workspace.postman_globals.json'"
