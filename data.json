@@ -1,0 +1,14 @@
+[
+    {
+        "user_name": "Clark Kent",
+        "user_job": "Reporter"
+    },
+    {
+        "user_name": "Bruce Wayne",
+        "user_job": "CEO"
+    },
+    {
+        "user_name": "Peter Parker",
+        "user_job": "Photographer"
+    }
+]

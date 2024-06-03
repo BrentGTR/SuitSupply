@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "4397889d-fa5c-4181-9d40-ee5885fb0dc6",
+		"name": "Contract Testing",
+		"description": "## Contract Testing Collection\n\n### Overview\n\nThe Contract Testing collection contains tests to verify the contract between the client and the server. These tests validate that the API responses conform to the expected structure and behavior.\n\n### Test: Validate Response for User Listing Endpoint\n\n**Endpoint:** `{{base_url}}/api/users?page=2`\n\n**Assertions:**\n\n1. **Status Code is 200**\n    \n    - pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200);});\n        \n2. **Response is a JSON Object**\n    \n    - pm.test(\"Response is a json object\", function () { pm.expect(pm.response.json()).to.be.an('object');});\n        \n3. **Response Has 'total_pages' Object**\n    \n    - pm.test(\"Response to have 'total_pages' object\", function () { pm.expect(pm.response.json()).to.have.property('total_pages');});\n        \n4. **Response Has 'total' Property**\n    \n    - pm.test(\"Response to have 'total' property\", function () { pm.expect(pm.response.json()).to.have.property('total');});\n        \n5. pm.expect(tv4.validate(responseJson, schema)).to.be.true;\n    \n    - // Arrangeconst schema = { // Schema definition};\n        \n    \n    // Act  \n    const responseJson = pm.response.json();\n    \n    // Assert  \n    pm.test(\"Response schema is valid\", function () {\n    \n    });\n    \n\n### Additional Notes\n\n- This test suite covers essential aspects of the API response, ensuring that it meets the expected contract.\n    \n- Adjustments to the assertions or schema validation can be made as necessary to accommodate changes in the API specifications.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34215784",
+		"_collection_link": "https://www.postman.com/material-specialist-25618300/workspace/suitsupply/collection/34215784-4397889d-fa5c-4181-9d40-ee5885fb0dc6?action=share&source=collection_link&creator=34215784"
+	},
+	"item": [
+		{
+			"name": "/users (valid)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Validate that the response code should be 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Validate that the response is json object",
+							"pm.test(\"Response is a json object\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('object');",
+							"});",
+							"",
+							"// Validate that the response has total_pages object",
+							"pm.test(\"Response to have 'total_pages' object\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property('total_pages');",
+							"});",
+							"",
+							"// Validate that the response has total property",
+							"pm.test(\"Response to have 'total' property\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property('total');",
+							"});",
+							"",
+							"// Arrange",
+							"const schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"page\": { \"type\": \"integer\" },",
+							"        \"per_page\": { \"type\": \"integer\" },",
+							"        \"total\": { \"type\": \"integer\" },",
+							"        \"total_pages\": { \"type\": \"integer\" },",
+							"        \"data\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"id\": { \"type\": \"integer\" },",
+							"                    \"email\": { \"type\": \"string\" },",
+							"                    \"first_name\": { \"type\": \"string\" },",
+							"                    \"last_name\": { \"type\": \"string\" },",
+							"                    \"avatar\": { \"type\": \"string\" }",
+							"                },",
+							"                \"required\": [\"id\", \"email\", \"first_name\", \"last_name\", \"avatar\"]",
+							"            }",
+							"        },",
+							"        \"support\": {",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"url\": { \"type\": \"string\" },",
+							"                \"text\": { \"type\": \"string\" }",
+							"            },",
+							"            \"required\": [\"url\", \"text\"]",
+							"        }",
+							"    },",
+							"    \"required\": [\"page\", \"per_page\", \"total\", \"total_pages\", \"data\", \"support\"]",
+							"};",
+							"",
+							"// Act",
+							"const responseJson = pm.response.json();",
+							"console.log('Response Data:', responseJson);",
+							"",
+							"// Assert",
+							"pm.test(\"Response schema is valid\", function () {",
+							"    pm.expect(tv4.validate(responseJson, schema)).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/users?page=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

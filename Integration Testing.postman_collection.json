@@ -1,0 +1,435 @@
+{
+	"info": {
+		"_postman_id": "01161be1-1347-4d19-a496-87a30ed4cb22",
+		"name": "Integration Testing",
+		"description": "## Integration Testing Collection\n\n### Overview\n\nThe Integration Testing collection contains tests to validate the functionality and behavior of various API endpoints. These tests simulate real-world interactions with the API to ensure that it meets the desired requirements and specifications.\n\n### Test: Validate User Listing Endpoint\n\n**Endpoint:** `{{base_url}}/api/users?page=2`\n\n**Assertions:**\n\n1. **Status Code is 200**\n    \n    - pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200);});\n        \n2. **Response Contains User Data**\n    \n    - pm.test(\"Response contains user data\", function () { pm.expect(pm.response.json().data).to.be.an('array').and.to.have.length.above(0);});\n        \n3. **Response Pagination is Correct**\n    \n    - pm.test(\"Response pagination is correct\", function () { const responseData = pm.response.json(); pm.expect(responseData).to.have.property('page').and.to.eql(2); pm.expect(responseData).to.have.property('total_pages').and.to.be.a('number'); pm.expect(responseData).to.have.property('total').and.to.be.a('number');});\n        \n\n### Additional Notes\n\n- This test suite covers essential functionality of the User Listing endpoint, ensuring that it returns the expected data and pagination information.\n    \n- Additional tests can be added to cover other endpoints and scenarios as needed.\n    \n- Adjustments to the assertions or test cases can be made to accommodate changes in the API specifications.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34215784",
+		"_collection_link": "https://www.postman.com/material-specialist-25618300/workspace/suitsupply/collection/34215784-01161be1-1347-4d19-a496-87a30ed4cb22?action=share&source=collection_link&creator=34215784"
+	},
+	"item": [
+		{
+			"name": "/users (valid)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// ASSERT ",
+							"// Validate that the response code should be 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Expected response schema",
+							"const schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"data\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": {",
+							"        \"type\": \"object\",",
+							"        \"properties\": {",
+							"          \"id\": {\"type\": \"integer\"},",
+							"          \"email\": {\"type\": \"string\"},",
+							"          \"first_name\": {\"type\": \"string\"},",
+							"          \"last_name\": {\"type\": \"string\"}",
+							"        },",
+							"        \"required\": [\"id\", \"email\", \"first_name\", \"last_name\"]",
+							"      }",
+							"    }",
+							"  },",
+							"  \"required\": [\"data\"]",
+							"};",
+							"",
+							"// Validate the expected schema against that of the response",
+							"const response = pm.response.json();",
+							"pm.test('Schema is valid', function() {",
+							"    pm.expect(tv4.validate(response, schema)).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/users?page=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users (valid)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Arrange",
+							"const expectedStatus = 201;",
+							"const expectedName = pm.variables.get('user_name');",
+							"const expectedJob = pm.variables.get('user_job');",
+							"",
+							"// Act",
+							"const responseJson = pm.response.json();",
+							"",
+							"// Assert",
+							"pm.test(\"Status code is \" + expectedStatus, function () {",
+							"    pm.response.to.have.status(expectedStatus);",
+							"});",
+							"",
+							"pm.test(\"Response contains expected data\", function () {",
+							"    pm.expect(responseJson.name).to.eql(expectedName);",
+							"    pm.expect(responseJson.job).to.eql(expectedJob);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Arrange\r",
+							"const userName = pm.iterationData.get('user_name');\r",
+							"const userJob = pm.iterationData.get('user_job');\r",
+							"\r",
+							"// Act\r",
+							"pm.variables.set('user_name', userName);\r",
+							"pm.variables.set('user_job', userJob);\r",
+							"\r",
+							"// Assert\r",
+							"console.log('User Name:', pm.variables.get('user_name'));  // Ensure the variable is set correctly\r",
+							"console.log('User Job:', pm.variables.get('user_job'));    // Ensure the variable is set correctly\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{user_name}}\",\r\n    \"job\": \"{{user_job}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/users",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users (Missing required fields)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// ** This negative scenario assumes that there are two bugs on the POST API **",
+							"",
+							"// Assert",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"Missing required fields\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/users",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users/2 (valid)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// ARRANGE",
+							"// Parse the response JSON",
+							"const responseData = pm.response.json();",
+							"",
+							"// ASSERT ",
+							"// Assert that the response is successful (status code 200)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Assert that the updated user name and job match the expected values",
+							"pm.test(\"User name is updated\", function () {",
+							"    pm.expect(responseData.name).to.eql(pm.variables.get('user_name'));",
+							"});",
+							"",
+							"pm.test(\"User job is updated\", function () {",
+							"    pm.expect(responseData.job).to.eql(pm.variables.get('user_job'));",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Arrange\r",
+							"const userName = pm.iterationData.get('user_name');\r",
+							"const userJob = pm.iterationData.get('user_job');\r",
+							"\r",
+							"// Act\r",
+							"pm.variables.set('user_name', userName);\r",
+							"pm.variables.set('user_job', userJob);\r",
+							"\r",
+							"// Assert\r",
+							"console.log('User Name:', pm.variables.get('user_name'));  // Ensure the variable is set correctly\r",
+							"console.log('User Job:', pm.variables.get('user_job'));    // Ensure the variable is set correctly\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{user_name}}\",\r\n    \"job\": \"{{user_job}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/users/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users/2 (Invalid data)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// ** This negative scenario assumes that there are two bugs on the PUT API **",
+							"",
+							"// ASSERT ",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid data format\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"12345\",\r\n    \"job\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/users/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users/999 (Non-existent user)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// ** This negative scenario assumes that there are two bugs on the PUT API **\r",
+							"\r",
+							"// ASSERT \r",
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Error message is correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.error).to.eql(\"User not found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/users/999ABC",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"999ABC"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
