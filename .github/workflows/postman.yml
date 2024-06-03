@@ -1,0 +1,27 @@
+name: Postman Collection Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Contract Testing Collection
+        run: newman run 'Contract Testing.postman_collection.json' --global-var "data='data.json'" --global-var "workspace='workspace.postman_globals.json'"
+
+      - name: Run Integration Testing Collection
+        run: newman run 'Integration Testing.postman_collection.json' --global-var "data='data.json'" --global-var "workspace='workspace.postman_globals.json'"
